@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        .btn{
+            display: block;
+            margin: 30px auto ;
+            width: 200px;
+            height: 50px;
+            background-color: #85fff5;
+        }
+        .items{
+            margin: 0 auto;
+            width: 1000px;
+            border: 1px solid #000;
+            position: relative;
+        }
+        .item{
+            width: 230px;
+            border: 1px solid #000;
+            /*margin: 10px其实根本没有设置边距，是位置有隔开而已，不是设置了边距;*/
+            position: absolute;
+        }
+        .item img{
+            width: 100%;
+        }
+        .item p{
+            width: 100%;
+        }
+
+    </style>
+</head>
+<body>
+<h1>非常简约的新浪微博</h1>
+<input type="button" class="btn" value="来吧点击加载更多随机瀑布">
+<div class="items"></div>
+</body>
+</html>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/template-native.js"></script>
+<script src="jq_extend/jquery.ownWaterfall.js"></script>
+<script type="text/template" id="tem">
+    <%for(var i=0;i<itemArr.length;i++){%>
+    <div class="item">
+        <img src="<%=itemArr[i].path%>">
+        <p><%=itemArr[i].text%></p>
+    </div>
+    <%}%>
+</script>
+<script>
+    $(function () {
+        $(".btn").click(function () {
+            $.ajax({
+                url:'weibo.php',
+                type:'get',
+                // 写了才会把返回来的东西转成json对象
+                //写了之后就不再需要在回掉函数写var JA = JSON.parse(xingcan);
+                dataType:'json',
+                success:function (data) {
+                    var obj ={
+                        itemArr:data
+                    }
+                   var result= template('tem',obj);
+                    $(".items").append(result);
+                    $(".items").ownWaterfall();
+                }
+            });
+
+        })
+    });
+</script>
